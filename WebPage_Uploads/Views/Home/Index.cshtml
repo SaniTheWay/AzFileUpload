@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    var msg = ViewBag.status;
+    var filename = ViewBag.filename;
+}
+@if (msg == 201)
+{
+    <div class="alert alert-success" role="alert">
+        '@filename' is successfully uploaded to <code>Sanidhya/</code> folder
+    </div>
+}
+@if (msg == 409)
+{
+    <div class="alert alert-danger" role="alert">
+        '@filename' is already exists in <code>Sanidhya/</code> folder
+    </div>
+}
+@if (msg == 400)
+{
+    <div class="alert alert-danger" role="alert">
+        <b>Invalid File</b>
+    </div>
+}
+<h3>Upload you Blob in <code>Sanidhya/</code> folder</h3>
+@using (Html.BeginForm("UploadForm", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <label>Select file to upload</label>
+    <input type="file" id="myFile" name="ufile" runat="server" />
+    <br />
+    <input type="submit" value="submit" class="btn-primary">
+}
+
+<h3>Result</h3>
+<b>FileName:</b>    @filename
+<br />
+<b>Status:</b>  @msg
