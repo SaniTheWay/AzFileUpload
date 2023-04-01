@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebPage_Uploads.DataDB;
@@ -39,7 +40,7 @@ namespace WebPage_Uploads.Controllers
         // GET: BlobRecords/Create
         public ActionResult Create()
         {
-            return RedirectToAction("UploadForm","HomeController");
+            return View("../Home/Index");
         }
 
         // POST: BlobRecords/Create
@@ -59,37 +60,7 @@ namespace WebPage_Uploads.Controllers
             return View(blobRecord);
         }
 
-        // GET: BlobRecords/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            BlobRecord blobRecord = db.BlobRecords.Find(id);
-            if (blobRecord == null)
-            {
-                return HttpNotFound();
-            }
-            return View(blobRecord);
-        }
-
-        // POST: BlobRecords/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,blob_name,date,url")] BlobRecord blobRecord)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(blobRecord).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(blobRecord);
-        }
-
+       
         // GET: BlobRecords/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -108,10 +79,15 @@ namespace WebPage_Uploads.Controllers
         // POST: BlobRecords/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
             BlobRecord blobRecord = db.BlobRecords.Find(id);
             db.BlobRecords.Remove(blobRecord);
+            var check = await AzureBlobClient.DeleteBlob(blobRecord.url);
+            if(check==false)
+            {
+                ViewBag.status = 400;
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }

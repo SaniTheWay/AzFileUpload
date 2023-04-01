@@ -27,22 +27,29 @@ namespace WebPage_Uploads.Controllers
                 try
                 {
                     var blob = await AzureBlobClient.UploadBlob(ufile, ufile?.FileName);
-                    if (blob.id == 0)
-                        db.BlobRecords.Add(blob);
+                    if (blob != null) { 
+                        if (blob.id == 0)
+                            db.BlobRecords.Add(blob);
+                        else
+                        {
+                            var rec = db.BlobRecords.Find(blob.id);
+                            rec.blob_name = blob.blob_name;
+                            db.Entry(rec).State = EntityState.Modified;
+                        }
+                        db.SaveChanges();
+                        ViewBag.status = 201;
+                        //if (ModelState.IsValid)
+                        //{
+                        //    record.Add(blob);
+                        //    db.SaveChanges();
+                        //    ViewBag.status = 201;
+                        //}
+                        //return View("Index");
+                    }
                     else
                     {
-                        var rec = db.BlobRecords.Find(blob.id);
-                        rec.blob_name = blob.blob_name;
-                        db.Entry(rec).State = EntityState.Modified;
+                        ViewBag.status = 413;
                     }
-                        db.SaveChanges();
-                    //if (ModelState.IsValid)
-                    //{
-                    //    record.Add(blob);
-                    //    db.SaveChanges();
-                    //    ViewBag.status = 201;
-                    //}
-                    return View("About");
                 }
                 catch
                 {

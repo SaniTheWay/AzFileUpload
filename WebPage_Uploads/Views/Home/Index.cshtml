@@ -21,6 +21,12 @@
         <b>Invalid File</b>
     </div>
 }
+@if (msg == 413)
+{
+    <div class="alert alert-danger" role="alert">
+        <b>File Size exceeded(>5MB)</b>
+    </div>
+}
 <h3>Upload you Blob in <code>Sanidhya/</code> folder</h3>
 @using (Html.BeginForm("UploadForm", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {

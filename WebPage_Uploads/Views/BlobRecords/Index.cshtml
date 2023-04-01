@@ -8,7 +8,7 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Upload")
+    @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
@@ -24,23 +24,47 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.blob_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.date)
-        </td>
-        <td>
-            <a href="@item.url" target="_blank">Link</a>
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.blob_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date)
+            </td>
+            <td>
+                @*<button id="imgId" type="button" class="btn btn-success" onclick="openImg(@item.url)">Open Modal</button>*@
+                @*<a href="#" onclick="
+        document.getElementById('imgId_@item.blob_name').onclick() function() {
+                                    replaceClass('imgId_@item.blob_name', 'hide', 'show');
+                                       ">Open</a>*@
+                <span>
+                    <label class="btn-link">@item.url</label>
+                        @*<img src="@item.url" alt="Alternate Text" width="250" />*@
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-group">
+                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                </button>
+            </td>
+        </tr>
+    }
 
 </table>
+<script>
+    function replaceClass(id, oldClass, newClass) {
+        var elem = document.getElementById(id);
+        elem.classList.remove(oldClass);
+        elem.classList.add(newClass);
+    }
+    
+
+    function openImg(imgurl) {
+        window.open(imgurl);
+        var i = document.getElementById(imgId)
+        i.innerHTML = "<a href='imgurl' target='_blank'>hey</a>";
+    }
+</script>
